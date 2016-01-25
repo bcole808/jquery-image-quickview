@@ -18,22 +18,7 @@ this.jQuery && (function ($) {
 			this.$containerCell = $('#imageQuickViewCell');
 
 			// Quick View FX
-			$wrapper.delegate("a","click",function(e) {
-
-				var targetURL = $(e.currentTarget).attr('href');
-
-				// Do not intercept URLs that are alt-clicked
-				if (e.metaKey) return true;
-
-				// Intercept image URLs
-				if (quickView.hasImageExtension(targetURL)) {
-					var content = quickView.createMarkupForImage(targetURL);
-					quickView.show(content);
-					return false;
-				}
-
-				return true;
-			});
+			$wrapper.delegate("a","click", quickView.processClickEvent);
 
 			// Close on click
 			this.$container.click(quickView.hide);
@@ -44,12 +29,45 @@ this.jQuery && (function ($) {
 			});
 		},
 
+		processClickEvent : function(e) {
+
+			var targetURL = $(e.currentTarget).attr('href');
+
+			// Do not intercept URLs that are alt-clicked
+			if (e.metaKey) return true;
+
+			// Intercept image URLs
+			if (quickView.hasImageExtension(targetURL)) {
+				quickView.showImage(targetURL);
+				return false;
+			}
+
+			// Intercept Youtube videos
+			var youtube_id = quickView.getYoutubeID(targetURL);
+			if (youtube_id) {
+				quickView.showYoutube(youtube_id);
+				return false;
+			}
+
+			return true;
+		},
+
 		hasImageExtension : function(url) {
 			if (url) return(url.match(/\.(jpeg|jpg|gif|png)$/) != null);
 		},
 
-		createMarkupForImage : function(targetURL) {
-			return '<img src="'+targetURL+'" />';
+		getYoutubeID : function(url) {
+			var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+			var match = url.match(regExp);
+			return (match&&match[7].length==11)? match[7] : false;
+		},
+
+		showYoutube : function(youtube_id) {
+			quickView.show('<iframe id="myIframe" width="100%" height="100%" src="https://www.youtube.com/embed/'+youtube_id+'?autoplay=1"></iframe>');
+		},
+
+		showImage : function(image_url) {
+			quickView.show('<img src="'+image_url+'" />');
 		},
 
 		show : function(content_html) {

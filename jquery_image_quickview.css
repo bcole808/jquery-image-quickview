@@ -31,6 +31,11 @@ Image Quick View
 	box-shadow: 2px 2px 5px rgba(0,0,0,0.8);
 	cursor: pointer;
 }
+#imageQuickView iframe {
+	max-width: 80%;
+	max-height: 80%;
+	border: none;
+}
 #imageQuickView .caption {
 	color:#FFFFFF;
 	max-width:640px;
