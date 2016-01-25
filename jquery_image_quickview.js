@@ -20,15 +20,19 @@ this.jQuery && (function ($) {
 			// Quick View FX
 			$wrapper.delegate("a","click",function(e) {
 
-				
 				var targetURL = $(e.currentTarget).attr('href');
 
-				// Do not intercept URLs that are not images or alt-clicked
-				if (!quickView.hasImageExtension(targetURL) || e.metaKey) return true;
+				// Do not intercept URLs that are alt-clicked
+				if (e.metaKey) return true;
 
-				quickView.show(targetURL);
+				// Intercept image URLs
+				if (quickView.hasImageExtension(targetURL)) {
+					var content = quickView.createMarkupForImage(targetURL);
+					quickView.show(content);
+					return false;
+				}
 
-				return false;
+				return true;
 			});
 
 			// Close on click
@@ -44,14 +48,13 @@ this.jQuery && (function ($) {
 			if (url) return(url.match(/\.(jpeg|jpg|gif|png)$/) != null);
 		},
 
-		show : function(targetURL) {
+		createMarkupForImage : function(targetURL) {
+			return '<img src="'+targetURL+'" />';
+		},
 
-			var elem = '<img src="'+targetURL+'" />';
-
-			quickView.$containerCell.html(elem).css('height',$(window).height()+"px").css('width',$(window).width()+"px");
-
+		show : function(content_html) {
+			quickView.$containerCell.html(content_html).css('height',$(window).height()+"px").css('width',$(window).width()+"px");
 			quickView.$container.fadeIn(80);
-
 			quickView.lockScroll();
 		},
 
