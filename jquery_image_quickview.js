@@ -36,6 +36,9 @@ this.jQuery && (function ($) {
 			// Do not intercept URLs that are alt-clicked
 			if (e.metaKey) return true;
 
+			// Do not intercept things on tiny devices
+			if (quickView.isSmallScreen()) return true;
+
 			// Intercept image URLs
 			if (quickView.hasImageExtension(targetURL)) {
 				quickView.showImage(targetURL);
@@ -57,6 +60,10 @@ this.jQuery && (function ($) {
 			}
 
 			return true;
+		},
+
+		isSmallScreen: function() {
+			return window.innerWidth < 500;
 		},
 
 		hasImageExtension : function(url) {
