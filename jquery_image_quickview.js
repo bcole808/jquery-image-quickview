@@ -49,6 +49,13 @@ this.jQuery && (function ($) {
 				return false;
 			}
 
+			// Intercept Vimeo videos
+			var vimeo_id = quickView.getVimeoID(targetURL);
+			if (vimeo_id) {
+				quickView.showVimeo(vimeo_id);
+				return false;
+			}
+
 			return true;
 		},
 
@@ -62,8 +69,18 @@ this.jQuery && (function ($) {
 			return (match&&match[7].length==11)? match[7] : false;
 		},
 
+		getVimeoID : function(url) {
+			var re = /\/\/(?:www\.)?vimeo.com\/([0-9a-z\-_]+)/i;
+			var matches = re.exec(url);
+			return matches && matches[1];
+		},
+
 		showYoutube : function(youtube_id) {
 			quickView.show('<iframe id="myIframe" width="100%" height="100%" src="https://www.youtube.com/embed/'+youtube_id+'?autoplay=1"></iframe>');
+		},
+
+		showVimeo : function(vimeo_id) {
+			quickView.show('<iframe src="https://player.vimeo.com/video/'+vimeo_id+'?autoplay=1" width="100%" height="100%" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>');
 		},
 
 		showImage : function(image_url) {
