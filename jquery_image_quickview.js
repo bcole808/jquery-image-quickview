@@ -77,7 +77,7 @@ this.jQuery && (function ($) {
 		},
 
 		getVimeoID : function(url) {
-			var re = /\/\/(?:www\.)?vimeo.com\/([0-9a-z\-_]+)/i;
+			var re = /\/\/(?:www\.)?vimeo.com\/(?:channels\/staffpicks\/)?([0-9a-z\-_]+)/i;
 			var matches = re.exec(url);
 			return matches && matches[1];
 		},
